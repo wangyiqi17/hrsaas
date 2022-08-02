@@ -6,6 +6,12 @@ import store from './store'
 // import { getToken } from '@/utils/auth' // get token from cookie
 // import getPageTitle from '@/utils/get-page-title'
 
+
+
+// 路由（全局）前置守卫
+// to
+// from
+// next
 const whiteList = ['/login', '/404']
 router.beforeEach((to, from, next) => {
 const token = store.state.user.token
