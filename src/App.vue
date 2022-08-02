@@ -5,12 +5,11 @@
 </template>
 
 <script>
+console.log(123)
 export default {
   name: 'App',
-  data () {
-    return {
-      // console.log(123),
-    }
-  }
+  data() {
+    return {}
+  },
 }
 </script>
