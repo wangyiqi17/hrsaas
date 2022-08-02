@@ -87,7 +87,7 @@ export default {
         this.$router.push('/')
         this.$message.success('登录成功')
       } finally {
-        isLogin = false
+        this.isLogin = false
       }
     },
   },
