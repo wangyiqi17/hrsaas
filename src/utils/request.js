@@ -85,13 +85,19 @@
 // export default service
 
 
+import store from '@/store'
 import axios from 'axios'
 import {Message} from 'element-ui'
 const service = axios.create({
   baseURL:process.env.VUE_APP_BASE_API,
   timeout: 5000,
 })
-service.interceptors.request.use()
+service.interceptors.request.use((config) => {
+  if(store.state.user.token) {
+    config.headers.Authorization = 'Bearer ' + store.state.user.token
+  }
+  return config
+})
 service.interceptors.response.use((res) => {
   console.log(res);
 

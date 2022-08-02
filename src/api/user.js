@@ -14,7 +14,28 @@ export function login(data) {
     })
 }
 
-export function getInfo(token) {
+
+/**
+ * 获取用户信息
+ * @returns promise
+ */
+export function getUserInfoApi() {
+    return request({
+        url:'/sys/profile',
+        method: 'POST',
+    })
+}
+
+
+/**
+ * 
+ * @param {String} id 用户id
+ * @returns promise
+ */
+export function getUserDetail(id) {
+    return request({
+        url:'/sys/user/' + id,
+    })
 }
 
 export function logout() {

@@ -1,4 +1,4 @@
-import router from './router'
+import router from '@/router'
 import store from './store'
 // import { Message } from 'element-ui'
 // import NProgress from 'nprogress' // progress bar
@@ -16,6 +16,10 @@ const whiteList = ['/login', '/404']
 router.beforeEach((to, from, next) => {
 const token = store.state.user.token
 if(token) {
+    // 获取用户信息
+    if(!store.state.user.userInfo.userId){
+        store.dispatch('user/getUserInfo')
+    }    
     // 1.登录
     // 是否进入登录页
     if(to.path === '/login') {
@@ -36,5 +40,6 @@ if(token) {
         // 2.2 不在白名单（未登录不可访问的页面） 跳到登录页
         next('/login')
     }
+
 }
 })
