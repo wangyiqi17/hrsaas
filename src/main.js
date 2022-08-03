@@ -15,6 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import * as directives from '@/directives'
+
 // mock假数据
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
@@ -30,6 +32,21 @@ Vue.use(ElementUI, { locale })
 // test：测试
 // production：打包上线
 Vue.config.productionTip = false
+
+// 参数1：自定义指令的名字：不需要加v-
+// 参数2：是配置对象
+// Vue.directive('imgError', {
+//   // 当被绑定的元素插入到dom中时...
+//   inserted: function(el, {value}) {
+//     // 监听dom img 图片加载失败的事件
+//     el.onerror = function () {
+//       el.src = value
+//     }
+//   }
+// })
+for(let key in directives) {
+  Vue.directive(key, directives[key])
+}
 
 new Vue({
   el: '#app',
