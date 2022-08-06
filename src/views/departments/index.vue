@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <el-card class="box-card">
+      <el-card class="box-card" v-loading="loading">
         <TreeTools @add="showAddDept" :isRoot='true' :treeNode="company" />
         <el-tree :data="treeData" :props="defaultProps" default-expand-all>
           <!-- 这是作用域插槽 -->
@@ -38,6 +38,7 @@ export default {
         { name: '行政部' },
         { name: '人事部' },
       ],
+      loading:"false"
     }
   },
   components:{
@@ -51,8 +52,10 @@ export default {
 
   methods: {
     async loadDepts() {
+      loading = "true"
       const res = await getDeptsApi()
       this.treeData = transListToTree(res.depts, '')
+      loading = "false"
     },
     showAddDept(val) {
       this.dialogVisible=true,
