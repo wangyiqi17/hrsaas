@@ -40,3 +40,15 @@ export function getUserDetail(id) {
 
 export function logout() {
 }
+
+/**
+ * 删除部门
+ * @param {*} id 要删除的部门
+ * @returns promise
+ */
+export function delDeptsApi(id) {
+    return request({
+        url:'/company/department/' + id,
+        method:'DELETE',
+    })
+}

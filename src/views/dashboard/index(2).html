@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const list =[
+            { name: '章三', id: 1, pid: 0 },
+            { name: '章三三',  id: 2, pid: 1},
+            { name: '里斯', id: 3, pid: 0 },
+            { name: '里斯斯', id: 4, pid: 3 },
+            { name: '王五', id: 5, pid: 0 }
+        ]
+
+        function transListToTree(data, pid) {
+            const arr = []
+            data.forEach((item) => {
+                if(item.pid === pid) {
+                    const children = transListToTree(data, item.id)
+                    if(children.length) {
+                        item.children = children
+                    }
+                    arr.push(item)
+                }
+                
+            });
+            return arr
+        }
+        const tree = transListToTree(list, 0)
+        console.log(tree);
+    </script>
+</body>
+</html>
