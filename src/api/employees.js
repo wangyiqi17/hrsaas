@@ -7,4 +7,11 @@ export function getEmployeesApi() {
 }
 
 
+export function getEmployeesInfoApi(params) {
+    return request({
+        url:'/sys/user',
+        params
+    })
+}
+
 

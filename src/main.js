@@ -17,6 +17,12 @@ import '@/permission' // permission control
 
 import * as directives from '@/directives'
 
+import components from "@/components"
+
+Vue.use(components)
+
+
+
 // mock假数据
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
