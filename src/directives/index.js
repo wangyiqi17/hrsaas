@@ -1,13 +1,18 @@
 export const imgError = {
-    inserted:function(el, {value}) {
-        el.onerror = function() {
+    inserted(el, {value}) {
+        if (!el.src) {
             el.src = value;
+        } else {
+            el.onerror = function() {
+                el.src = value;
+            }
+        }
+        
+    },
+    update(el, {value}) {
+        if(!el.src) {
+            el.src = value
         }
     }
 }
-// export const aa = {
-//     inserted() {}
-// }
-// export const bb = {
-//     inserted() {}
-// }
+

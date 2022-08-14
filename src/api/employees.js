@@ -15,3 +15,33 @@ export function getEmployeesInfoApi(params) {
 }
 
 
+
+export function delEmployee(id) {
+    return request({
+        url:`/sys/user/${id}`,
+        method: 'DELETE',
+    })
+}
+
+
+
+
+/** **
+ *  新增员工的接口
+ * **/
+export function addEmployee(data) {
+  return request({
+    method: 'post',
+    url: '/sys/user',
+    data
+  })
+}
+
+
+export function importEmployees(data) {
+  return request({
+    method: 'post',
+    url: '/sys/user/batch',
+    data
+  })
+}
