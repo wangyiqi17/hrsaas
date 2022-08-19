@@ -62,3 +62,12 @@ export function importEmployees(data) {
     data
   })
 }
+
+
+export function assignRoles(data) {
+  return request({
+    method: 'put',
+    url: '/sys/user/assignRoles',
+    data
+  })
+}

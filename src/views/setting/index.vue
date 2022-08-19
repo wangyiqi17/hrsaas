@@ -15,7 +15,9 @@
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="{ row }">
-                <el-button size="small" type="success">分配权限</el-button>
+                <el-button size="small" type="success" @click="showRightDialog"
+                  >分配权限</el-button
+                >
                 <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger" @click="onRemove(row.id)"
                   >删除</el-button
@@ -87,15 +89,40 @@
         <el-button type="primary" @click="onAddRole">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配权限弹窗 -->
+    <el-dialog
+      @close="dialogClose"
+      title="给角色分配权限"
+      :visible.sync="setRightsDialog"
+      width="50%"
+    >
+      <el-tree
+        default-expand-all
+        show-checkbox
+        :data="permissions"
+        :props="{ label: 'name' }"
+        :default-checked-keys="defaultCheckKeys"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRightsDialog = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRolesApi, addRoleApi, removeRoleApi } from '@/api/role'
 import { getCompanyInfoApi } from '@/api/setting'
+import { getPermissionList } from '@/api/permission'
+import { transListToTree } from '@/utils'
 export default {
   data() {
     return {
+      defaultCheckKeys: ['1', '1063315016368918528'],
+      permissions: [],
+      setRightsDialog: false,
       activeName: 'first',
       tableData: [],
       total: 0,
@@ -116,6 +143,7 @@ export default {
   created() {
     this.getRoles()
     this.getCompanyInfo()
+    this.getPermissions()
   },
 
   methods: {
@@ -155,6 +183,14 @@ export default {
       this.formData = await getCompanyInfoApi(
         this.$store.state.user.userInfo.companyId,
       )
+    },
+    showRightDialog() {
+      this.setRightsDialog = true
+    },
+    async getPermissions() {
+      const res = await getPermissionList()
+      const treePermission = transListToTree(res, '0')
+      this.permissions = treePermission
     },
   },
 }
