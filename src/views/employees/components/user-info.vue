@@ -1,6 +1,10 @@
 <template>
   <div class="user-info">
     <!-- 个人信息 -->
+    <i
+      @click="$router.push(`/employees/print/${userId}?type=personal`)"
+      class="el-icon-printer"
+    ></i>
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
       <el-row class="inline-info">
