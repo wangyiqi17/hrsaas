@@ -8,12 +8,17 @@
             size="small"
             type="warning"
             @click="$router.push('/import')"
+            v-if="isHas('employees-import')"
             >导入</el-button
           >
           <el-button size="small" type="danger" @click="exportExcel"
             >导出</el-button
           >
-          <el-button size="small" type="primary" @click="AddEmployees"
+          <el-button
+            size="small"
+            type="primary"
+            @click="AddEmployees"
+            v-if="isHas(point.employees.add)"
             >新增员工</el-button
           >
         </template>
@@ -79,7 +84,11 @@
                 @click="showAssignDialog(row.id)"
                 >角色</el-button
               >
-              <el-button type="text" size="small" @click="onRemove(row.id)"
+              <el-button
+                type="text"
+                size="small"
+                @click="onRemove(row.id)"
+                v-isHas="point.employees.del"
                 >删除</el-button
               >
             </template>
@@ -122,7 +131,9 @@ import employees from '@/constant/employees'
 import AddEmployees from './components/add-employees.vue'
 import QRcode from 'qrcode'
 import AssignRole from './components/assign-role.vue'
+import MixinPermission from '@/mixins/permission'
 const { exportExcelMapPath, hireType } = employees
+
 export default {
   name: 'Employees',
   data() {
@@ -139,6 +150,7 @@ export default {
       ercodeDialog: false,
     }
   },
+  mixins: [MixinPermission],
   components: {
     AddEmployees,
     AssignRole,
@@ -209,6 +221,9 @@ export default {
     showAssignDialog(id) {
       this.showAssignRole = true
       this.currentEmployeesId = id
+    },
+    isHas(point) {
+      return this.$store.state.permission.points.includes(point)
     },
   },
 }

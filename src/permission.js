@@ -1,4 +1,4 @@
-import router from '@/router'
+import router, {asyncRoutes} from '@/router'
 import store from './store'
 // import { Message } from 'element-ui'
 // import NProgress from 'nprogress' // progress bar
@@ -18,7 +18,10 @@ const token = store.state.user.token
 if(token) {
     // 获取用户信息
     if(!store.state.user.userInfo.userId){
-       await store.dispatch('user/getUserInfo')
+       const {roles} = await store.dispatch('user/getUserInfo')
+       await store.dispatch('permission/filterRoutes',roles)
+       await store.dispatch('permission/setPointsAction',roles.points)
+       next(to.path)
     }    
     // 1.登录
     // 是否进入登录页

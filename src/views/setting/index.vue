@@ -3,7 +3,10 @@
     <div class="app-container">
       <el-tabs v-model="activeName">
         <el-tab-pane label="角色管理" name="first">
-          <el-button type="primary" @click="addDialogVisible = true"
+          <el-button
+            type="primary"
+            @click="addDialogVisible = true"
+            v-isHas="point.roles.add"
             >新建角色</el-button
           >
           <!-- 表格 -->
@@ -15,7 +18,10 @@
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="{ row }">
-                <el-button size="small" type="success" @click="showRightDialog"
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="showRightDialog(row.id)"
                   >分配权限</el-button
                 >
                 <el-button size="small" type="primary">编辑</el-button>
@@ -92,35 +98,46 @@
 
     <!-- 分配权限弹窗 -->
     <el-dialog
-      @close="dialogClose"
       title="给角色分配权限"
       :visible.sync="setRightsDialog"
       width="50%"
+      destroy-on-close
+      @close="setRightsClose"
     >
       <el-tree
         default-expand-all
         show-checkbox
+        node-key="id"
+        ref="perTree"
         :data="permissions"
         :props="{ label: 'name' }"
         :default-checked-keys="defaultCheckKeys"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRightsDialog = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="onSaveRights">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRolesApi, addRoleApi, removeRoleApi } from '@/api/role'
+import {
+  getRolesApi,
+  addRoleApi,
+  removeRoleApi,
+  getRolesInfo,
+  assignPerm,
+} from '@/api/role'
 import { getCompanyInfoApi } from '@/api/setting'
 import { getPermissionList } from '@/api/permission'
 import { transListToTree } from '@/utils'
+import MixinPermission from '@/mixins/permission'
 export default {
   data() {
     return {
-      defaultCheckKeys: ['1', '1063315016368918528'],
+      roleId: '',
+      defaultCheckKeys: [],
       permissions: [],
       setRightsDialog: false,
       activeName: 'first',
@@ -139,6 +156,7 @@ export default {
       formData: {},
     }
   },
+  mixins: [MixinPermission],
 
   created() {
     this.getRoles()
@@ -180,17 +198,34 @@ export default {
       this.getRoles()
     },
     async getCompanyInfo() {
-      this.formData = await getCompanyInfoApi(
+      const res = await getCompanyInfoApi(
         this.$store.state.user.userInfo.companyId,
       )
+      this.companyInfo = res
     },
-    showRightDialog() {
+    async showRightDialog(id) {
+      this.roleId = id
       this.setRightsDialog = true
+      const res = await getRolesInfo(id)
+      // console.log(res.permIds)
+      this.defaultCheckKeys = res.permIds
     },
     async getPermissions() {
       const res = await getPermissionList()
       const treePermission = transListToTree(res, '0')
       this.permissions = treePermission
+    },
+    setRightsClose() {
+      this.defaultCheckKeys = []
+      console.log(this.defaultCheckKeys)
+    },
+    async onSaveRights() {
+      await assignPerm({
+        id: this.roleId,
+        permIds: this.$refs.perTree.getCheckedKeys(),
+      })
+      this.$message.success('分配成功')
+      this.setRightsDialog = false
     },
   },
 }
