@@ -1,10 +1,10 @@
 <template>
   <div class="user-info">
-    <!-- 个人信息 -->
     <i
       @click="$router.push(`/employees/print/${userId}?type=personal`)"
       class="el-icon-printer"
     ></i>
+    <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
       <el-row class="inline-info">
@@ -61,6 +61,7 @@
       <el-row class="inline-info">
         <el-col :span="12">
           <el-form-item label="员工头像">
+            <!-- 放置上传图片 -->
             <upload-img ref="headerImg" @onSuccess="headerImgSuccess" />
           </el-form-item>
         </el-col>
@@ -96,6 +97,7 @@
         <!-- 员工照片 -->
 
         <el-form-item label="员工照片">
+          <!-- 放置上传图片 -->
           <upload-img ref="employeesPic" @onSuccess="employeesPicSuccess" />
         </el-form-item>
         <el-form-item label="国家/地区">
@@ -395,9 +397,9 @@
 
 <script>
 import EmployeeEnum from '@/constant/employees'
-import { getUserDetail, saveUserDetailById } from '@/api/user'
-import { getPersonalDetail, updatePersonal } from '@/api/employees'
-import uploadImg from '@/components/UploadImg'
+import { getUserDetail, saveUserDetailById } from '@/api/user.js'
+import { getPersonalDetail, updatePersonal } from '@/api/employees.js'
+
 export default {
   data() {
     return {
@@ -469,9 +471,6 @@ export default {
       },
     }
   },
-  components: {
-    uploadImg,
-  },
   created() {
     this.loadUserDetail()
     this.loadEmployeesInfo()
@@ -494,6 +493,7 @@ export default {
         return this.$message.error('头像正在上传中')
       }
       await saveUserDetailById(this.userInfo)
+
       this.$message.success('更新成功')
     },
     async onSaveEmployeesInfo() {
@@ -503,9 +503,11 @@ export default {
       await updatePersonal(this.formData)
       this.$message.success('更新成功')
     },
+    // 监听员工头像上传成功
     headerImgSuccess({ url }) {
       this.userInfo.staffPhoto = url
     },
+    // 监听员工照片上传成功
     employeesPicSuccess({ url }) {
       this.formData.staffPhoto = url
     },

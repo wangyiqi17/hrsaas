@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { delDeptsApi } from '@/api/user'
+import { delDeptsApi } from '@/api/departments'
 export default {
   name: 'TreeTools',
   data() {
@@ -47,26 +47,24 @@ export default {
       default: false,
     },
   },
+
   created() {},
 
   methods: {
     async onRemove() {
       try {
-        await this.$confirm('此操作将永久删除该部门，是否确认删除？', '提示', {
+        await this.$confirm('此操作将永久删除该部门, 是否继续?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning',
         })
-        // console.log('点击确定删除')
         await delDeptsApi(this.treeNode.id)
         this.$message.success('删除成功')
         this.$emit('remove')
-        // console.log(3333333)
-        // console.log(this.treeNode.id)
       } catch (err) {}
     },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="less"></style>

@@ -1,85 +1,70 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-import approvalsRouter from './modules/approvals'
-import departmentsRouter from './modules/departments'
-import employeesRouter from './modules/employees'
-import permissionRouter from './modules/permission'
-import attendancesRouter from './modules/attendances'
-import salarysRouter from './modules/salarys'
-import settingRouter from './modules/setting'
-import socialRouter from './modules/social'
-import importModules from './modules/import'
+import employees from './modules/employees'
+import approvals from './modules/approvals'
+import attendances from './modules/attendances'
+import departments from './modules/departments'
+import permission from './modules/permission'
+import salarys from './modules/salarys'
+import setting from './modules/setting'
+import social from './modules/social'
+import importModule from './modules/import'
 
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
 
-
+// 静态路由
 export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
   },
 
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
+    hidden: true,
   },
 
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' },
+      },
+    ],
   },
-
-  // 404 page must be placed at the end !!!
-  
 ]
 
+// 动态路由: 准备好项目所有动态路由, 基于后端返回的用户权限对动态路由进行筛选
 export const asyncRoutes = [
-  approvalsRouter,
-  departmentsRouter,
-  employeesRouter,
-  permissionRouter,
-  attendancesRouter,
-  salarysRouter,
-  settingRouter,
-  socialRouter,
-  importModules
+  employees,
+  approvals,
+  departments,
+  attendances,
+  permission,
+  salarys,
+  setting,
+  social,
+  importModule,
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes]
-})
-
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: [...constantRoutes], // 路由规则
+  })
+// vueRouter实例
 const router = createRouter()
-
-
-// // 全局路由守卫
-// // 会在所有路由进入之前触发
-// router.beforeEach((to, from, next) => {
-//   console.log(to);
-//   // 进行权限控制
-//   // 调用next 进入该路由，如果没有调用则无法进入
-//   // 如果输入/login调用next，如果输入其他则进入login
-//   if(to.path === '/login') {
-//     next()
-//   } else {
-//     next('./login')
-//   }
-// })
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

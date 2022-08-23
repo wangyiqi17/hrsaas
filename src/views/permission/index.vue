@@ -11,10 +11,9 @@
         ref="table"
         row-key="id"
         :data="permissions"
-        slot="right"
         style="width: 100%"
       >
-        <el-table-column prop="name" label="名称" width="180">
+        <el-table-column label="名称" width="180">
           <template v-slot="{ row }">
             <i
               v-if="row.children"
@@ -22,6 +21,11 @@
               class="el-icon-folder-opened"
               @click="expend(row)"
             ></i>
+            <!-- <i
+              v-if="row.type === 2"
+              class="el-icon-folder"
+              style="margin-right: 5px"
+            ></i> -->
             <span>{{ row.name }}</span>
           </template>
         </el-table-column>
@@ -38,42 +42,38 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 放置一个弹层 用来编辑新增节点 -->
-      <el-dialog title="新增权限点" :visible="showDialog">
-        <!-- 表单 -->
-        <el-form
-          ref="form"
-          :model="formData"
-          :rules="rules"
-          label-width="120px"
-        >
-          <el-form-item label="权限名称" prop="name">
-            <el-input v-model="formData.name" style="width: 90%" />
-          </el-form-item>
-          <el-form-item label="权限标识" prop="code">
-            <el-input v-model="formData.code" style="width: 90%" />
-          </el-form-item>
-          <el-form-item label="权限描述">
-            <el-input v-model="formData.description" style="width: 90%" />
-          </el-form-item>
-          <el-form-item label="开启">
-            <el-switch
-              v-model="formData.enVisible"
-              active-value="1"
-              inactive-value="0"
-            />
-          </el-form-item>
-        </el-form>
-        <el-row slot="footer" type="flex" justify="center">
-          <el-col :span="6">
-            <el-button size="small" type="primary" @click="onSave"
-              >确定</el-button
-            >
-            <el-button size="small">取消</el-button>
-          </el-col>
-        </el-row>
-      </el-dialog>
     </div>
+
+    <!-- 放置一个弹层 用来编辑新增节点 -->
+    <el-dialog title="添加权限点" :visible.sync="showDialog">
+      <!-- 表单 -->
+      <el-form ref="form" :model="formData" :rules="rules" label-width="120px">
+        <el-form-item label="权限名称" prop="name">
+          <el-input v-model="formData.name" style="width: 90%" />
+        </el-form-item>
+        <el-form-item label="权限标识" prop="code">
+          <el-input v-model="formData.code" style="width: 90%" />
+        </el-form-item>
+        <el-form-item label="权限描述">
+          <el-input v-model="formData.description" style="width: 90%" />
+        </el-form-item>
+        <el-form-item label="开启">
+          <el-switch
+            v-model="formData.enVisible"
+            active-value="1"
+            inactive-value="0"
+          />
+        </el-form-item>
+      </el-form>
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button size="small" type="primary" @click="onSave"
+            >确定</el-button
+          >
+          <el-button size="small">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -103,16 +103,18 @@ export default {
       showDialog: false,
     }
   },
+
   created() {
     this.getPermissions()
   },
+
   methods: {
     async getPermissions() {
       const res = await getPermissionList()
-      // console.log(res)
       this.permissions = transListToTree(res, '0')
     },
     expend(row) {
+      // console.log('点击展开', row)
       row.isExpand = !row.isExpand
       this.$refs.table.toggleRowExpansion(row, row.isExpand)
     },
@@ -124,7 +126,6 @@ export default {
     onSave() {
       this.$refs.form.validate(async (valid) => {
         if (!valid) return
-        console.log('发送请求')
         await addPermission(this.formData)
         this.$message.success('添加成功')
         this.showDialog = false

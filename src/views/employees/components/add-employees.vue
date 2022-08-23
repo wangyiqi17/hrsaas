@@ -1,6 +1,5 @@
 <template>
-  <el-dialog title="新增员工" :visible="visible" @close="onClose" width="50%">
-    <!-- 表单 -->
+  <el-dialog @close="onClose" title="新增员工" :visible="visible" width="50%">
     <el-form ref="form" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="姓名" prop="username">
         <el-input
@@ -46,17 +45,22 @@
         />
       </el-form-item>
       <el-form-item label="部门" prop="departmentName">
+        <!-- <el-input
+          v-model="formData.departmentName"
+          style="width: 50%"
+          placeholder="请选择部门"
+        /> -->
         <el-select
+          @focus="getDepts"
           v-model="formData.departmentName"
           placeholder="请选择部门"
-          @focus="getDepts"
           ref="deptSelect"
         >
-          <el-option value="" v-loading="isTreeLoading" class="treeOption">
+          <el-option class="treeOption" v-loading="isTreeLoading" value="">
             <el-tree
+              @node-click="treeNodeClick"
               :data="depts"
               :props="treeProps"
-              @node-click="treeNodeClick"
             ></el-tree>
           </el-option>
         </el-select>
@@ -69,25 +73,18 @@
         />
       </el-form-item>
     </el-form>
-    <!-- footer插槽 -->
-    <template v-slot:footer>
-      <el-row type="flex" justify="center">
-        <el-col :span="6">
-          <el-button size="small" @click="onClose">取消</el-button>
-          <el-button type="primary" size="small" @click="onSave"
-            >确定</el-button
-          >
-        </el-col>
-      </el-row>
-    </template>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="onClose">取 消</el-button>
+      <el-button @click="onSave" type="primary">确 定</el-button>
+    </span>
   </el-dialog>
 </template>
 
 <script>
+import employees from '@/constant/employees'
 import { getDeptsApi } from '@/api/departments'
 import { transListToTree } from '@/utils'
-import employees from '@/constant/employees'
-import { addEmployee } from '../../../api/employees'
+import { addEmployee } from '@/api/employees'
 const { hireType } = employees
 export default {
   data() {
@@ -162,6 +159,7 @@ export default {
       this.isTreeLoading = false
     },
     treeNodeClick(row) {
+      // console.log(row)
       this.formData.departmentName = row.name
       this.$refs.deptSelect.blur()
     },
@@ -178,12 +176,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover .el-select-dropdown__item {
   background-color: #fff;
   overflow: unset;
 }
+
 .treeOption {
   height: 100px;
 }

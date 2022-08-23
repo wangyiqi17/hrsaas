@@ -3,7 +3,7 @@
     <el-row type="flex">
       <el-col>
         <el-tag v-if="isShowLeft">
-          <i class="leftIcon"></i>
+          <i :class="leftIcon"></i>
           <slot name="left-tag" />
         </el-tag>
       </el-col>
@@ -42,6 +42,6 @@ export default {
 
 <style scoped lang="scss">
 .box-card {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 </style>

@@ -1,10 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <upload-excel
-        :beforeUpload="excelSuccess"
-        :onSuccess="onSuccess"
-      ></upload-excel>
+      <upload-excel :beforeUpload="excelSuccess" :onSuccess="onSuccess" />
     </div>
   </div>
 </template>
@@ -22,6 +19,7 @@ export default {
   created() {},
 
   methods: {
+    // 上传前的处理
     excelSuccess({ name }) {
       if (!name.endsWith('.xlsx')) {
         this.$message.error('请选择xlsx文件')
@@ -29,18 +27,17 @@ export default {
       }
       return true
     },
+    // 上传成功
     async onSuccess({ header, results }) {
       const newArr = results.map((item) => {
         const obj = {}
         for (let key in importMapKeyPath) {
           if (key === '入职日期' || key === '转正日期') {
-            // excel时间戳
+            // excel 时间戳
             const timestamp = item[key]
-            // 转换成js
+            // 转换
             const date = new Date((timestamp - 1) * 24 * 3600000)
-            // js起始时间1970  excel起始时间1900
             date.setFullYear(date.getFullYear() - 70)
-            // 利用封装的formatTime组件格式化
             obj[importMapKeyPath[key]] = formatTime(date)
           } else {
             obj[importMapKeyPath[key]] = item[key]

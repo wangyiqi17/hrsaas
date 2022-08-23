@@ -6,16 +6,19 @@
       @toggleClick="toggleSideBar"
     />
 
+    <!-- <breadcrumb class="breadcrumb-container" /> -->
     <div class="app-breadcrumb">
       {{ $store.state.user.userInfo.companyName }}
       <span class="breadBtn">体验版</span>
     </div>
 
     <div class="right-menu">
+      <ToggleLang />
+      <full-screen></full-screen>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
-            :src="$store.state.user.userInfo.staffPhoto || defaultImg"
+            :src="$store.state.user.userInfo.staffPhoto + '123'"
             class="user-avatar"
             v-imgError="defaultImg"
           />
@@ -40,12 +43,11 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import defaultImg from '@/assets/common/head.jpg'
+
 export default {
+  // 如果想在data中定义本地图片路径,需要先引入
   data() {
     return {
-      // 如果想在data中定义本地图片路径，需要先引入
-      // defaultImg: require('../../assets/avator.png'),
-      // defaultImg: 'http://liufusong.top/logo.jpeg',
       defaultImg,
     }
   },
@@ -70,7 +72,6 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  color: #ffffff;
   height: 50px;
   overflow: hidden;
   position: relative;
@@ -95,6 +96,7 @@ export default {
       margin-left: 15px;
     }
   }
+
   .hamburger-container {
     line-height: 46px;
     height: 100%;
@@ -102,7 +104,7 @@ export default {
     cursor: pointer;
     transition: background 0.3s;
     -webkit-tap-highlight-color: transparent;
-    color: #ffffff;
+    color: #fff;
     fill: currentColor;
 
     &:hover {
@@ -118,9 +120,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-    span {
-      margin: 0 10px;
-    }
+    display: flex;
 
     &:focus {
       outline: none;
@@ -149,11 +149,14 @@ export default {
 
       .avatar-wrapper {
         position: relative;
-        // margin-top: 5px;
-        // 开启flex
         display: flex;
         align-items: center;
         color: #fff;
+        cursor: pointer;
+
+        span {
+          margin: 0 3px;
+        }
 
         .user-avatar {
           cursor: pointer;
@@ -166,7 +169,6 @@ export default {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          // top: 25px;
           font-size: 12px;
         }
       }

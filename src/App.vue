@@ -1,11 +1,11 @@
 <template>
   <div id="app">
+    <!-- 一级路由占位 -->
     <router-view />
   </div>
 </template>
 
 <script>
-// console.log(123)
 export default {
   name: 'App',
   data() {
